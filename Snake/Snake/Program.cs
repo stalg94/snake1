@@ -10,7 +10,7 @@ namespace Snake
 	{
 		static void Main( string[] args )
 		{
-			Console.SetBufferSize( 80, 25 );
+			Console.SetWindowSize( 80, 25 );
 
 			Walls walls = new Walls( 80, 25 );
 			walls.Draw();
@@ -22,7 +22,21 @@ namespace Snake
 
 			FoodCreator foodCreator = new FoodCreator( 80, 25, '$' );
 			Point food = foodCreator.CreateFood();
-			food.Draw();
+			FoodCreator foodCreator2 = new FoodCreator(80, 25, 'R');
+			Point food2 = foodCreator2.CreateFood();
+			food.Draw("Blue");
+
+			Param settings = new Param();
+
+			Sound sound = new Sound(settings.GetResourceFolder());
+			sound.Play();
+			Sound sound1 = new Sound(settings.GetResourceFolder());														  
+			Scores score = new Scores(settings.GetResourceFolder());
+
+			Timer time = new Timer();
+			time.Counter();
+
+
 
 			while (true)
 			{
@@ -33,7 +47,28 @@ namespace Snake
 				if(snake.Eat( food ) )
 				{
 					food = foodCreator.CreateFood();
-					food.Draw();
+					food2 = foodCreator2.CreateFood();
+					sound1.PlayEat();
+					int check = score.currentFood();
+					int n;
+					if (check > 0 && ((check + 10) % 100) == 0)
+					{
+						food2.Draw("Grey");
+						n = 1;
+
+					}
+					else if (check > 0 && check % 100 == 0)
+					{
+						food.Draw("Blue");
+						n = 2;
+					}
+					else
+					{
+						food.Draw("Blue");
+						n = 1;
+					}
+					score.UpCurrentPoints(n);
+					score.ShowCurrentPoints();
 				}
 				else
 				{
@@ -47,29 +82,13 @@ namespace Snake
 					snake.HandleKey( key.Key );
 				}
 			}
-			WriteGameOver();
+			sound.Play("gameover");
+			time.CounterStatus(false);
+			score.WriteGameOver();
+			score.userName();
+			score.WriteBestResult();
 			Console.ReadLine();
-      }
 
-
-		static void WriteGameOver()
-		{
-			int xOffset = 25;
-			int yOffset = 8;
-			Console.ForegroundColor = ConsoleColor.Red;
-			Console.SetCursorPosition( xOffset, yOffset++ );
-			WriteText( "============================", xOffset, yOffset++ );
-			WriteText( "И Г Р А    О К О Н Ч Е Н А", xOffset + 1, yOffset++ );
-			yOffset++;
-			WriteText( "Автор: Евгений Картавец", xOffset + 2, yOffset++ );
-			WriteText( "Специально для GeekBrains", xOffset + 1, yOffset++ );
-			WriteText( "============================", xOffset, yOffset++ );
-		}
-
-		static void WriteText( String text, int xOffset, int yOffset )
-		{
-			Console.SetCursorPosition( xOffset, yOffset );
-			Console.WriteLine( text );
 		}
 
 	}

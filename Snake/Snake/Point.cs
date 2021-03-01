@@ -11,6 +11,7 @@ namespace Snake
 		public int x;
 		public int y;
 		public char sym;
+		public string color = "";
 
 		public Point()
 		{
@@ -55,16 +56,19 @@ namespace Snake
 			return p.x == this.x && p.y == this.y;
 		}
 
-		public void Draw()
+		public void Draw(string _color)
 		{
-			Console.SetCursorPosition( x, y );
-			Console.Write( sym );			
+			color = _color;
+			Console.ForegroundColor = (ConsoleColor)Enum.Parse(typeof(ConsoleColor), color);
+			Console.SetCursorPosition(x, y);
+			Console.Write(sym);
+			Console.ForegroundColor = ConsoleColor.Gray;
 		}
 
 		public void Clear()
 		{
 			sym = ' ';
-			Draw();
+			Draw("Black");
 		}
 
 		public override string ToString()

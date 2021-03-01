@@ -24,13 +24,34 @@ namespace Snake
 
 		public void Move()
 		{
-			Point tail = pList.First();			
-			pList.Remove( tail );
-			Point head = GetNextPoint();
-			pList.Add( head );
-
-			tail.Clear();
-			head.Draw();
+			if (direction != Direction.PAUSE)
+			{
+				Timer.status = true;
+				int xOffset = 80;
+				int yOffset = 15;
+				Console.ForegroundColor = ConsoleColor.Gray;
+				Console.SetCursorPosition(xOffset, yOffset++);
+				WriteText("============================", xOffset, yOffset++);
+				WriteText("Нажмите пробел для паузы ", xOffset + 2, yOffset++);
+				WriteText("============================", xOffset, yOffset++);
+				Point tail = pList.First();
+				pList.Remove(tail);
+				Point head = GetNextPoint();
+				pList.Add(head);
+				tail.Clear();
+				head.Draw("Green");
+			}
+			else
+			{
+				Timer.status = false;
+				int xOffset = 80;
+				int yOffset = 15;
+				Console.ForegroundColor = ConsoleColor.Red;
+				Console.SetCursorPosition(xOffset, yOffset++);
+				WriteText("=== Для продолжения игры ===", xOffset, yOffset++);
+				WriteText("= = = = П А У З А = = = =", xOffset + 2, yOffset++);
+				WriteText("= нажмите на любую стрелку =", xOffset, yOffset++);
+			}
 		}
 
 		public Point GetNextPoint()
@@ -75,6 +96,11 @@ namespace Snake
 			}
 			else
 				return false;
+		}
+		static void WriteText(String text, int xOffset, int yOffset)
+		{
+			Console.SetCursorPosition(xOffset, yOffset);
+			Console.WriteLine(text);
 		}
 	}
 }
